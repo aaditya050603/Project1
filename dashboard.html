@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard | EduManage</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+        }
+        
+        .dashboard-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(42, 108, 255, 0.08);
+            padding: 32px;
+        }
+        
+        h1 {
+            color: #2a6cff;
+            margin-bottom: 8px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        
+        .nav a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background .2s;
+        }
+        
+        .nav a:hover {
+            background: #e8f0ff;
+            color: #2a6cff;
+        }
+        
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+        
+        .module-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(42, 108, 255, 0.04);
+        }
+        
+        .module-card h3 {
+            margin: 10px 0 6px;
+            font-size: 18px;
+            color: #0f172a;
+        }
+        
+        .module-card p {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .logout {
+            float: right;
+            color: #fff;
+            background: #2a6cff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .logout:hover {
+            background: #1e40af;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <button class="logout" onclick="logout()">Logout</button>
+        <h1>Welcome to your Dashboard</h1>
+        <div class="nav">
+            <a href="#profile">Profile</a>
+            <a href="#students">Students</a>
+            <a href="#staff">Staff</a>
+            <a href="#finance">Finance</a>
+            <a href="#reports">Reports</a>
+        </div>
+        <div class="modules">
+            <div class="module-card">
+                <h3>Student Information</h3>
+                <p>View and manage student records.</p>
+            </div>
+            <div class="module-card">
+                <h3>Admissions</h3>
+                <p>Track applications and enrolments.</p>
+            </div>
+            <div class="module-card">
+                <h3>Attendance</h3>
+                <p>Monitor attendance and timetables.</p>
+            </div>
+            <div class="module-card">
+                <h3>Finance</h3>
+                <p>Manage fees and payments.</p>
+            </div>
+            <div class="module-card">
+                <h3>Reports</h3>
+                <p>Generate analytics and insights.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Institution Management System | EduManage</title>
+  <meta name="description" content="All-in-one Institution Management System for schools, colleges, and training centers. Admissions, attendance, fee management, analytics, and more." />
+  <style>
+    /* ============ Base / Reset ============ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    :root{
+      --brand: #2a6cff;        /* Primary */
+      --brand-2: #7c4dff;      /* Accent */
+      --ink: #0f172a;          /* Text */
+      --muted: #475569;        /* Muted Text */
+      --card: #0b1020;         /* Dark for hero */
+      --bg-section: #f1f5f9;   /* Section bg */
+      --ring: rgba(42,108,255,0.25);
+      --shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+      --radius: 12px;
+      --radius-sm: 10px;
+      --radius-lg: 18px;
+      --content-max: 1180px;
+    }
+
+    .container { width: min(var(--content-max), 92%); margin-inline: auto; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 12px 18px; border-radius: 999px; font-weight: 600;
+      border: 1px solid transparent; transition: .2s ease; cursor: pointer;
+    }
+    .btn.primary { background: linear-gradient(90deg, var(--brand), var(--brand-2)); color: #fff; box-shadow: 0 8px 20px rgba(124,77,255,.25); }
+    .btn.primary:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn.secondary { background: #fff; color: var(--ink); border-color: #e2e8f0; }
+    .btn.secondary:hover { box-shadow: var(--shadow); }
+    .chip { font-size: 12px; padding: 6px 10px; border-radius: 999px; background: #e8f0ff; color: #1e40af; border: 1px solid #cfe0ff; display: inline-block; }
+
+    /* ============ Header ============ */
+    header {
+      position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(180%) blur(8px);
+      background: rgba(255,255,255,.75); border-bottom: 1px solid rgba(2, 6, 23, 0.06);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: 0 6px 18px rgba(42,108,255,0.35);
+    }
+    .brand-name { font-weight: 800; letter-spacing: .2px; }
+
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 600; font-size: 14px; padding: 8px 10px; border-radius: 8px; }
+    .nav-links a:hover { color: var(--ink); background: #f1f5f9; }
+
+    .mobile-toggle { display: none; background: transparent; border: 0; padding: 8px; cursor: pointer; }
+
+    /* ============ Hero ============ */
+    .hero {
+      background: radial-gradient(1000px 400px at 20% -20%, #dbeafe, transparent 60%),
+                  radial-gradient(1000px 500px at 90% 10%, #ede9fe, transparent 50%),
+                  linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      padding: 48px 0 24px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 50px; }
+
+    .kicker { margin-bottom: 12px; }
+    .heading-xl { font-size: clamp(28px, 4.2vw, 48px); line-height: 1.12; margin: 8px 0 14px; font-weight: 900; letter-spacing: -0.5px; }
+    .subhead { color: var(--muted); font-size: clamp(15px, 2.2vw, 18px); }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+
+    .hero-card {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow);
+      display: grid; gap: 10px; grid-template-columns: 1fr 1fr; align-items: center;
+    }
+    .hc-metric { background: #0b1020; color: #e2e8f0; border-radius: var(--radius); padding: 16px; }
+    .hc-metric h4 { margin: 0 0 6px; font-size: 20px; }
+    .hc-metric p { margin: 0; color: #94a3b8; font-size: 13px; }
+
+    .hc-list { display: grid; gap: 10px; }
+    .hc-item { border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 12px; }
+    .hc-item .ico { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: #0b1020; background: #f1f5f9; }
+    .hc-item span { font-weight: 600; color: #334155; }
+
+    /* ============ Features ============ */
+    section { padding: 58px 0; }
+    .section-title { text-align: center; margin-bottom: 24px; }
+    .section-title h2 { margin: 0; font-size: clamp(22px, 3.2vw, 34px); }
+    .section-title p { color: var(--muted); margin-top: 8px; }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature-card { border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 16px; background: #fff; box-shadow: var(--shadow); }
+    .feature-card .fc-head{ display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .badge { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: #eef2ff; color: #3730a3; font-weight: 800; }
+    .feature-card h3 { margin: 0; font-size: 18px; }
+    .feature-card p { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+
+    /* ============ Modules ============ */
+    .modules-wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .module { background: #0b1020; color: #e2e8f0; border: 1px solid #111827; border-radius: var(--radius); padding: 16px; position: relative; overflow: hidden; }
+    .module h4 { margin: 0 0 6px; }
+    .module p { margin: 0; color: #9ca3af; font-size: 14px; }
+    .module .m-ico { position: absolute; right: 10px; bottom: -8px; font-size: 42px; opacity: .15; }
+
+    /* ============ Stats ============ */
+    .stats { background: var(--bg-section); border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; }
+    .stat { padding: 14px; border-radius: var(--radius); background: #fff; border: 1px solid #e2e8f0; }
+    .stat h3 { margin: 0; font-size: 26px; }
+    .stat p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
+
+    /* ============ CTA ============ */
+    .cta-band { background: linear-gradient(90deg, var(--brand), var(--brand-2)); color: #fff; border-radius: var(--radius-lg); padding: 22px; display: grid; grid-template-columns: 1.2fr .8fr; gap: 10px; align-items: center; box-shadow: 0 12px 30px rgba(124,77,255,.25); }
+    .cta-band h3 { margin: 0 0 6px; font-size: clamp(18px, 2.6vw, 28px); }
+    .cta-band p { margin: 0 0 10px; color: #eef2ff; }
+    .cta-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* ============ Footer ============ */
+    footer { padding: 38px 0; }
+    .footer-grid { display: grid; grid-template-columns: 1.2fr repeat(3, 1fr); gap: 20px; }
+    .foot-title { font-weight: 800; margin-bottom: 8px; }
+    .foot-links { display: grid; gap: 6px; }
+    .foot-links a { color: var(--muted); font-size: 14px; }
+    .foot-links a:hover { color: var(--ink); }
+    .copyright { margin-top: 16px; color: #64748b; font-size: 13px; }
+
+    /* ============ Responsive ============ */
+    @media (max-width: 1024px) {
+      .features { grid-template-columns: repeat(2, 1fr); }
+      .modules-wrap { grid-template-columns: repeat(3, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .cta-band { grid-template-columns: 1fr; text-align: center; }
+    }
+    @media (max-width: 760px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: #fff; border-bottom: 1px solid #e2e8f0; padding: 10px 4%; }
+      .nav-links.open { display: grid; grid-template-columns: 1fr; gap: 6px; }
+      .mobile-toggle { display: inline-grid; }
+      .features { grid-template-columns: 1fr; }
+      .modules-wrap { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header / Navigation -->
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">IM</div>
+        <div class="brand-name">EduManage</div>
+      </div>
+      <nav>
+        <button class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false" id="mobileToggle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="#features">Features</a>
+          <a href="#modules">Modules</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a class="btn secondary" href="#demo">Request demo</a>
+        </div>
+      </nav>
+      <div class="hide-mobile">
+        <a class="btn primary" href="#get-started">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="chip kicker">Institution Management System</span>
+        <h1 class="heading-xl">Manage your institution in one place.</h1>
+        <p class="subhead">Admissions, academics, finance, and communication—centralized and secure. Built for schools, colleges, and training centers.</p>
+        <div class="cta">
+          <a class="btn primary" href="#demo">Request a Live Demo</a>
+          <a class="btn secondary" href="#modules">Explore Modules</a>
+        </div>
+      </div>
+
+      <div class="hero-card" aria-label="Key benefits overview">
+        <div class="hc-metric" role="group" aria-label="Performance metric">
+          <h4>99.9% uptime</h4>
+          <p>Reliable cloud-first platform</p>
+        </div>
+        <div class="hc-list">
+          <div class="hc-item">
+            <div class="ico" aria-hidden="true">📚</div>
+            <span>Unified student profiles</span>
+          </div>
+          <div class="hc-item">
+            <div class="ico" aria-hidden="true">🕒</div>
+            <span>Timetables & attendance</span>
+          </div>
+          <div class="hc-item">
+            <div class="ico" aria-hidden="true">💳</div>
+            <span>Fees & finance tracking</span>
+          </div>
+          <div class="hc-item">
+            <div class="ico" aria-hidden="true">📈</div>
+            <span>Analytics & reports</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="container">
+      <div class="section-title">
+        <h2>Powerful features to run day-to-day operations</h2>
+        <p>Automate workflows and improve visibility across departments.</p>
+      </div>
+      <div class="features">
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">📝</div>
+            <h3>Admissions & Enrolment</h3>
+          </div>
+          <p>Online applications, merit lists, and seat allocation with automated notifications.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">👩‍🏫</div>
+            <h3>Staff Management</h3>
+          </div>
+          <p>Faculty profiles, workload planning, payroll exports, and performance reviews.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">🗓️</div>
+            <h3>Timetable & Attendance</h3>
+          </div>
+          <p>Conflict-free scheduling, QR/rfid attendance, and automatic attendance reports.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">💬</div>
+            <h3>Communication Hub</h3>
+          </div>
+          <p>Email, SMS, and in-app notices. Segment students and guardians for targeted updates.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">💳</div>
+            <h3>Fees & Finance</h3>
+          </div>
+          <p>Invoices, receipts, concessions, and integrations with popular payment gateways.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head">
+            <div class="badge" aria-hidden="true">🔐</div>
+            <h3>Security & Compliance</h3>
+          </div>
+          <p>Role-based access, audit logs, encrypted data, and regional compliance support.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modules -->
+  <section id="modules" class="modules">
+    <div class="container">
+      <div class="section-title">
+        <h2>Modules at a glance</h2>
+        <p>Pick what you need now and add more as you grow.</p>
+      </div>
+      <div class="modules-wrap">
+        <div class="module">
+          <h4>Student Information System</h4>
+          <p>Centralize academic history, guardians, health, and documents.</p>
+          <div class="m-ico" aria-hidden="true">🎓</div>
+        </div>
+        <div class="module">
+          <h4>Course & Curriculum</h4>
+          <p>Programs, terms, subjects, lesson plans, and outcomes.</p>
+          <div class="m-ico" aria-hidden="true">📘</div>
+        </div>
+        <div class="module">
+          <h4>Exams & Grading</h4>
+          <p>Rubrics, grading scales, transcripts, and result publishing.</p>
+          <div class="m-ico" aria-hidden="true">🧪</div>
+        </div>
+        <div class="module">
+          <h4>Library</h4>
+          <p>Catalogs, circulation, fines, and barcode/RFID support.</p>
+          <div class="m-ico" aria-hidden="true">📚</div>
+        </div>
+        <div class="module">
+          <h4>Hostel & Transport</h4>
+          <p>Room/route allocation, logs, and fee integration.</p>
+          <div class="m-ico" aria-hidden="true">🚌</div>
+        </div>
+        <div class="module">
+          <h4>HR & Payroll</h4>
+          <p>Attendance, leaves, salary structures, and exports.</p>
+          <div class="m-ico" aria-hidden="true">👥</div>
+        </div>
+        <div class="module">
+          <h4>Inventory & Assets</h4>
+          <p>Vendors, purchase orders, stock, and depreciation.</p>
+          <div class="m-ico" aria-hidden="true">📦</div>
+        </div>
+        <div class="module">
+          <h4>Reports & Analytics</h4>
+          <p>Dashboards for leadership with drill-down insights.</p>
+          <div class="m-ico" aria-hidden="true">📊</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats" aria-label="Key statistics">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <h3>200k+</h3>
+          <p>Students managed</p>
+        </div>
+        <div class="stat">
+          <h3>1,200+</h3>
+          <p>Institutions onboarded</p>
+        </div>
+        <div class="stat">
+          <h3>50%</h3>
+          <p>Time saved on admin</p>
+        </div>
+        <div class="stat">
+          <h3>99.9%</h3>
+          <p>Uptime SLA</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing (placeholder anchors) -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-title">
+        <h2>Simple, scalable pricing</h2>
+        <p>Contact us for a tailored plan. Educational discounts available.</p>
+      </div>
+      <div class="features" aria-label="Pricing tiers">
+        <article class="feature-card">
+          <div class="fc-head"><div class="badge" aria-hidden="true">🌱</div><h3>Starter</h3></div>
+          <p>For small institutions getting started. Core modules and email support.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head"><div class="badge" aria-hidden="true">🌿</div><h3>Growth</h3></div>
+          <p>Advanced modules, analytics, and priority support.</p>
+        </article>
+        <article class="feature-card">
+          <div class="fc-head"><div class="badge" aria-hidden="true">🌳</div><h3>Enterprise</h3></div>
+          <p>Custom SLAs, SSO, on-prem options, and dedicated success manager.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Band -->
+  <section id="get-started">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h3>Ready to modernize your campus?</h3>
+          <p>See how EduManage streamlines operations and creates delightful experiences for students and staff.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="btn secondary" href="#demo">Book a demo</a>
+          <a class="btn primary" href="#contact">Talk to Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="about">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">
+          <div class="logo" aria-hidden="true">IM</div>
+          <div class="brand-name">EduManage</div>
+        </div>
+        <p class="copyright">© <span id="year"></span> EduManage. All rights reserved.</p>
+      </div>
+      <div>
+        <div class="foot-title">Product</div>
+        <div class="foot-links">
+          <a href="#features">Features</a>
+          <a href="#modules">Modules</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-title">Company</div>
+        <div class="foot-links">
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a href="#careers">Careers</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-title">Resources</div>
+        <div class="foot-links">
+          <a href="#blog">Blog</a>
+          <a href="#help">Help Center</a>
+          <a href="#status">Status</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle with aria state
+    const toggle = document.getElementById('mobileToggle');
+    const links = document.getElementById('navLinks');
+    toggle?.addEventListener('click', () => {
+      const open = links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    // Set dynamic year
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+  </script>
+</body>
+</html>
